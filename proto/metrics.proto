@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package com.uevora.sd.proto;
+
+option java_multiple_files = true;
+option java_package = "com.uevora.sd.proto";
+
+// Servicio para enviar métricas
+service MetricService {
+  rpc SendMetric (MetricRequest) returns (MetricResponse);
+}
+
+// Mensaje de solicitud (lo que envía el sensor)
+message MetricRequest {
+  string device_id = 1;      // Identificador único [cite: 61]
+  double temperature = 2;    // Temperatura registrada [cite: 62]
+  double humidity = 3;       // Humedad registrada [cite: 63]
+  string timestamp = 4;      // ISO 8601 recomendado [cite: 78]
+}
+
+// Mensaje de respuesta (lo que contesta el servidor)
+message MetricResponse {
+  bool success = 1;
+  string message = 2;
+}

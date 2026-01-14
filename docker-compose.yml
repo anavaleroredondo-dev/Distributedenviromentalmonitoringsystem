@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # Base de Datos PostgreSQL
+  postgres:
+    image: postgres:15
+    container_name: sd-postgres
+    environment:
+      POSTGRES_DB: monitor_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Broker MQTT (Mosquitto)
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: sd-mosquitto
+    ports:
+      - "1883:1883"      # Puerto MQTT
+      - "9001:9001"      # Puerto WebSockets (opcional)
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    # Crea un archivo mosquitto.conf básico si no arranca, 
+    # o usa este comando para permitir anónimos por simplicidad:
+    command: mosquitto -c /mosquitto-no-auth.conf 
+    # Nota: Para desarrollo rápido permitiremos acceso anónimo.
+
+volumes:
+  postgres_data:
